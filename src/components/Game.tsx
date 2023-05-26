@@ -8,6 +8,9 @@ import { getGameData } from "../features/slices/tictactoeSlice"
 
 import { initialGameState } from "../lib/data/initialGameState"
 
+import { ImCross } from 'react-icons/im'
+import { FaRegCircle } from 'react-icons/fa'
+
 import type { gameType } from "../features/slices/tictactoeSlice"
 import type { tictactoeButton } from "../lib/data/initialGameState"
 
@@ -17,8 +20,8 @@ export default function Game() {
   const { joinedGameId, game, id: userId } = useAppSelector(state => state.tictactoe)
   const [ movePending, setMovePending ] = useState(false)
 
-  async function play(moveIndex: number,  host: string) {
-    if (!game || movePending) return
+  async function play(moveIndex: number,  host: string, box: string) {
+    if (!game || movePending || box) return
 
     if ((game.turn && userId !== host) || (!game.turn && userId === host)) {
       throw new Error('wait for your turn')
@@ -98,12 +101,22 @@ export default function Game() {
         {game.game.map((box : tictactoeButton, index) => {
           return (
             <div key={index}
-            className="border border-black w-[100px] aspect-square"
+            onClick={() => play(index, game.host, box)}
+            className="border border-black w-[100px] aspect-square flex items-center justify-center"
             >
-              <div className={`w-full aspect-square` }
-                onClick={() => play(index, game.host)}
+              <div className="m-auto"
               >
-                {box}
+                {
+                  box === 'o' 
+                  ? <FaRegCircle 
+                    className="text-7xl"
+                  /> 
+                  : box === 'x' 
+                  ? <ImCross 
+                    className="text-6xl"
+                  /> 
+                  : box}
+
               </div>
             </div>
           )

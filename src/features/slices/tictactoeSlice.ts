@@ -18,7 +18,7 @@ export interface gameType {
     player: number
   }
   turn: boolean
-  host: string
+  host: string,  
 }
 
 interface initialStateType {

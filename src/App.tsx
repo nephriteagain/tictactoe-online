@@ -4,7 +4,7 @@ import Game from './components/Game'
 
 function App() {
 
- 
+ // TODO: add winning conditions, restart features, leave features, styles
 
   return (
     <>
