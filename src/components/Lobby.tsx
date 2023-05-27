@@ -162,11 +162,11 @@ export default function Lobby() {
         SHOW LOBBIES
       </button>
     </div>
-    <div className='absolute flex flex-col items-center pt-8 bg-zinc-400 w-[330px] h-full lobby z-10'
+    <div className='absolute flex flex-col items-center pt-8 bg-zinc-400 w-[300px] h-full lobby z-10'
       style={
         openLobby ?
         {transform: 'translateX(0px)'} :
-        {transform: 'translateX(-330px)'}
+        {transform: 'translateX(-300px)'}
       }
     >
       <div className='absolute top-2 right-2 '>
@@ -189,14 +189,14 @@ export default function Lobby() {
               Start
             </button>}
           </div>
-      <section className='w-[300px] min-h-[300px] max-h-[70%] py-2 bg-slate-100 rounded-2xl shadow-xl drop-shadow-lg overflow-auto'>
+      <section className='w-[280px] min-h-[300px] max-h-[70%] py-2 bg-slate-100 rounded-2xl shadow-xl drop-shadow-lg overflow-auto'>
       {lobby.length > 0 && lobby.map((item : lobbyType, index: number) => {
         return (
             <div className='flex flex-row' key={index}>
-              <div className='basis-1/3 bg-red-300 text-center flex items-center justify-center text-lg my-1'>
+              <div className='basis-1/3 bg-red-300 text-center flex items-center justify-center text-md my-1'>
                 {item?.host}
               </div>
-              <div className='basis-1/3 bg-blue-300 text-center flex items-center justify-center text-lg my-1'>
+              <div className='basis-1/3 bg-blue-300 text-center flex items-center justify-center text-md my-1'>
                 {item?.player}
               </div>
               <div className='basis-1/3 text-center bg-slate-200 py-2 my-1 h-[2.5rem]'>

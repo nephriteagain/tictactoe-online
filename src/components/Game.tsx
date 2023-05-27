@@ -15,11 +15,14 @@ import { FaRegCircle } from 'react-icons/fa'
 import type { gameType } from "../features/slices/tictactoeSlice"
 import type { tictactoeButton } from "../lib/data/initialGameState"
 
+type resultType = 'win'|'lose'|'draw'|null
+
 export default function Game() {
   
   const dispatch = useAppDispatch()
   const { joinedGameId, game, id: userId } = useAppSelector(state => state.tictactoe)
   const [ movePending, setMovePending ] = useState(false)
+  const [ result, setResult ] = useState<resultType>(null)
 
   async function play(moveIndex: number,  host: string, box: string) {
     if (!game || movePending || box) return
@@ -143,21 +146,38 @@ export default function Game() {
 
   if (game && game.game.length > 0) return (
     <div className="mx-auto relative">
-      <div className="absolute top-[5%] left-[50%] translate-x-[-50%] w-full">
-        <h2 className="text-center text-3xl font-bold">
+      <div className="font-bold text-center text-3xl mt-4">
+        TICTACTOE ONLINE
+      </div>
+      <div className="absolute top-[12%] left-[50%] translate-x-[-50%] w-full">
+        <h2 className="text-center text-3xl font-semibold">
           Game is Live
         </h2>
         <div>
 
           <div className="flex flex-row my-1">
-            <div className="basis-1/3 text-center font-semibold text-xl">
-              x: {game.score.host}
+            <div className="basis-1/3 text-center font-semibold text-xl flex flex-row items-center justify-center">
+              <span className="bg-slate-200 basis-1/2 flex items-center justify-center h-full py-[0.1rem]">
+              <ImCross 
+                className="inline text-orange-600"
+                />
+              </span>
+              <span className="bg-green-300 basis-1/2 py-[0.1rem] text-2xl">
+                {game.score.host}
+              </span>
             </div>
             <div className="basis-1/3 text-center font-semibold text-xl">
               SCORE
             </div>
-            <div className="basis-1/3 text-center font-semibold text-xl">
-              o: {game.score.player}
+            <div className="basis-1/3 text-center font-semibold text-xl flex flex-row items-center justify-center">
+              <span className="bg-slate-200 basis-1/2 flex items-center justify-center h-full py-[0.1rem]">
+              <FaRegCircle 
+                className="inline text-blue-600"
+                />
+              </span>
+              <span className="bg-green-300 basis-1/2 py-[0.1rem] text-2xl">
+                {game.score.player}
+              </span>
             </div>
           </div>
           <div className="text-center text-2xl font-bold mb-2">
