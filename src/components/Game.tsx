@@ -40,6 +40,7 @@ export default function Game() {
 
     const gameRef = joinedGameId && doc(db, 'tictactoe', joinedGameId)
     const isWinner = checkIfWin(newGameBoard, host, userId)
+    const allBoxesUsed = newGameBoard.every(box => box.length === 1)
   
     if (gameRef && isWinner && userId === host) {      
 
@@ -64,6 +65,22 @@ export default function Game() {
         "game": newGameBoard,
         "turn": userId === game.host ? false : true,
         "score.player": increment(1)
+      })
+        .then( async () => {
+          setMovePending(false)
+          await updateDoc(gameRef, {
+            game: initialGameState
+          })          
+        })
+        .catch(err =>  {
+         throw new Error(err)
+        })
+    }
+
+    else if (gameRef && allBoxesUsed) {
+      await updateDoc(gameRef, {
+        "game": newGameBoard,
+        "turn": userId === game.host ? false : true,
       })
         .then( async () => {
           setMovePending(false)
