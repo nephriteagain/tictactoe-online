@@ -15,14 +15,14 @@ import { FaRegCircle } from 'react-icons/fa'
 import type { gameType } from "../features/slices/tictactoeSlice"
 import type { tictactoeButton } from "../lib/data/initialGameState"
 
-type resultType = 'win'|'lose'|'draw'|null
+
 
 export default function Game() {
   
   const dispatch = useAppDispatch()
   const { joinedGameId, game, id: userId } = useAppSelector(state => state.tictactoe)
   const [ movePending, setMovePending ] = useState(false)
-  const [ result, setResult ] = useState<resultType>(null)
+  const [winnerStyle, setWinnerStyle ] = useState({top: '-7%'})
 
   async function play(moveIndex: number,  host: string, box: string) {
     if (!game || movePending || box) return
@@ -46,6 +46,7 @@ export default function Game() {
     const allBoxesUsed = newGameBoard.every(box => box.length === 1)
   
     if (gameRef && isWinner && userId === host) {      
+      showWinner()
 
       await updateDoc(gameRef, {
         "game": newGameBoard,
@@ -61,9 +62,12 @@ export default function Game() {
         .catch(err =>  {
          throw new Error(err)
         })
+        
     }
 
     else if (gameRef && isWinner && userId !== host) {
+      showWinner()
+
       await updateDoc(gameRef, {
         "game": newGameBoard,
         "turn": userId === game.host ? false : true,
@@ -78,6 +82,7 @@ export default function Game() {
         .catch(err =>  {
          throw new Error(err)
         })
+
     }
 
     else if (gameRef && allBoxesUsed) {
@@ -121,10 +126,32 @@ export default function Game() {
       })
   }
 
+  function whosTurn(user: string, turn: boolean, host: string) {
+    if ((turn && user !== host) || (!turn && user === host)) {
+      return "Opponent's Turn"
+    }
+    return "Your Turn"
+  }
+
+  function showWinner() {
+    const style = {
+      top: '7%'
+    }
+    const noStyle = {
+      top: '-7%'
+    }
+
+    setWinnerStyle(style)
+
+      const timeOut = setTimeout(() => {
+        setWinnerStyle(noStyle)
+        clearTimeout(timeOut)
+      }, 2000)
+  }
+
   useEffect(() => {
 
     if (!joinedGameId) return 
-    
     // console.log('game useEffect')
     const gameRef = doc(db, 'tictactoe', joinedGameId)
     const unsub = onSnapshot(gameRef, (doc) => {
@@ -137,15 +164,15 @@ export default function Game() {
   }, [joinedGameId])
 
 
-  function whosTurn(user: string, turn: boolean, host: string) {
-    if ((turn && user !== host) || (!turn && user === host)) {
-      return "Opponent's Turn"
-    }
-    return "Your Turn"
-  }
 
   if (game && game.game.length > 0) return (
-    <div className="mx-auto relative">
+    <>
+    <div className="result absolute right-[5%] bg-green-400 px-3 py-1 rounded-md shadow-sm drop-shadow-sm"
+      style={winnerStyle}
+    >
+      You Win!!
+    </div>
+    <div className="mx-auto relative">      
       <div className="font-bold text-center text-3xl mt-4">
         TICTACTOE ONLINE
       </div>
@@ -166,7 +193,7 @@ export default function Game() {
                 {game.score.host}
               </span>
             </div>
-            <div className="basis-1/3 text-center font-semibold text-xl">
+            <div className="basis-1/3 text-center font-semibold text-2xl">
               SCORE
             </div>
             <div className="basis-1/3 text-center font-semibold text-xl flex flex-row items-center justify-center">
@@ -193,9 +220,9 @@ export default function Game() {
           return (
             <div key={index}
             onClick={() => play(index, game.host, box)}
-            className="odd:bg-gray-200 even:bg-gray-400 w-[100px] aspect-square flex items-center justify-center"
+            className={`odd:bg-gray-200 even:bg-gray-400 w-[100px] aspect-square flex items-center justify-center ${((game.turn && userId !== game.host) || (!game.turn && userId === game.host)) ? 'error' : 'pointer'}`}
             >
-              <div className={`m-auto ${((game.turn && userId !== game.host) || (!game.turn && userId === game.host)) ? 'error' : 'pointer'}`}
+              <div className='m-auto'
               >
                 {
                   box === 'o' 
@@ -223,6 +250,7 @@ export default function Game() {
         </button>
       </div>
     </div>
+    </>
   )
     
   

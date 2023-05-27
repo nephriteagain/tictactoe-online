@@ -156,7 +156,7 @@ export default function Lobby() {
     <>
     <div className='absolute top-2 left-2 text-lg font-bold'>
       <button
-        className='bg-green-800 text-white px-3 py-1 rounded-md shadow-md drop-shadow-md hover:bg-green-400 hover:scale-105 active:scale-100 hover:text-black transition-all duration-150'
+        className='bg-green-800 text-white px-3 py-1 rounded-md shadow-md drop-shadow-md hover:bg-green-400 hover:scale-105 active:scale-100 hover:text-black transition-all duration-150 z-[5]'
         onClick={handleShowLobby}
       >
         SHOW LOBBIES
