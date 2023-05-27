@@ -7,7 +7,7 @@ import {
   deleteMyLobby,
   joinNewLobby,
   leaveLobby as leaveTheLobby,
-  tictactoeStart
+  tictactoeStart,
   
 } from '../features/slices/tictactoeSlice'
 
@@ -23,12 +23,15 @@ import {
 
 import { initialGameState } from '../lib/data/initialGameState'
 
+import { CgCloseR } from 'react-icons/cg'
+
 import type { lobbyType } from '../features/slices/tictactoeSlice'
 import type { tictactoeButton } from '../lib/data/initialGameState'
 
 export default function Lobby() {
 
   const [ playerJoined, setPlayerJoined ] = useState<string|null>(null)
+  const [ openLobby, setOpenLobby ] = useState<boolean>(true)
 
   const dispatch = useAppDispatch()
 
@@ -41,7 +44,7 @@ export default function Lobby() {
   } = useAppSelector(state => state.tictactoe)
 
   async function createLobby() {
-    if (createdLobby|| joinedLobby)  return
+    if (createdLobby|| joinedLobby || joinedLobbyId)  return
 
     const newLobbyRef = doc(db, 'lobby', userId)
     await setDoc(newLobbyRef, {
@@ -61,7 +64,7 @@ export default function Lobby() {
   }
 
   async function joinLobby(id: string) {
-    if (id === userId|| createdLobby|| joinedLobby) return
+    if (id === userId|| createdLobby|| joinedLobby || joinedLobbyId)  return
 
     const lobbyRef = doc(db, 'lobby', id)
     await updateDoc(lobbyRef, {
@@ -82,7 +85,7 @@ export default function Lobby() {
 
   async function startGame() {
     if (!createdLobby) return
-    console.log('start game ran')
+    // console.log('start game ran')
 
     const singleLobbyRef = doc(db, 'lobby', userId)
     const gameRef = doc(db, 'tictactoe', userId)
@@ -107,7 +110,7 @@ export default function Lobby() {
 
 
   useEffect(() => {
-    console.log('all lobbies useEffect')
+    // console.log('all lobbies useEffect')
 
     const lobbyRef = collection(db, 'lobby')
     const unsub = onSnapshot(lobbyRef, (snapshot) => {
@@ -121,14 +124,18 @@ export default function Lobby() {
     return () => unsub()
   }, [])
 
+  function handleShowLobby() {
+    setOpenLobby(prev => !prev)
+  }
 
   useEffect(() => {
     if (!joinedLobbyId) return
-    console.log('single lobby useEffect')
+
+    // console.log('single lobby useEffect')
     const singleLobbyRef = doc(db, 'lobby', joinedLobbyId)
     const unsub = onSnapshot(singleLobbyRef, (doc) => {
       const data = doc.data() as lobbyType      
-      console.log(data, 'data')
+      // console.log(data, 'data')
       if (data?.gameStarted) {        
         setPlayerJoined(null)
         joinedLobbyId && dispatch(tictactoeStart(joinedLobbyId))
@@ -146,49 +153,29 @@ export default function Lobby() {
   }, [joinedLobbyId])
 
   return (
-    <div className='mx-auto my-8'>
-      <section className='min-w-[300px] max-w-[600px] min-h-[300px] bg-slate-100 rounded-2xl shadow-xl drop-shadow-lg'>
-      {lobby.length > 0 && lobby.map((item : lobbyType, index: number) => {
-        return (
-            <div className='flex flex-row' key={index}>
-              <div className='basis-1/3 bg-red-300 text-center flex items-center justify-center text-lg my-1'>
-                {item?.host}
-              </div>
-              <div className='basis-1/3 bg-blue-300 text-center flex items-center justify-center text-lg my-1'>
-                {item?.player}
-              </div>
-              <div className='basis-1/3 text-center bg-slate-200 py-2 my-1'>
-                { (!joinedLobby && !item?.player) &&
-                  <button className='bg-green-300 px-3 rounded-md'
-                    onClick={(() => joinLobby(item?.host))}
-                  >
-                    JOIN
-                  </button> }
-                { (joinedLobbyId && (item?.player === userId)) && 
-                  <button className='bg-red-300 px-3  rounded-md'
-                    onClick={() => leaveLobby(item?.host)}
-                  >
-                    LEAVE
-                  </button>
-                }
-                { (joinedLobbyId && (item?.host === userId)) && 
-                  <button className='bg-red-300 px-3  rounded-md'
-                    onClick={deleteLobby}
-                  >
-                    DELETE
-                  </button>
-                }
-                { (item?.player && item?.player !== userId && joinedLobbyId !== userId) && 
-                  <button className='bg-orange-300 px-3  rounded-md'>
-                    FULL  
-                  </button>
-                }
-              </div>
-            </div>           
-        )
-      })}
-          </section>
-          <div className='my-4'>
+    <>
+    <div className='absolute top-2 left-2 text-lg font-bold'>
+      <button
+        className='bg-green-800 text-white px-3 py-1 rounded-md shadow-md drop-shadow-md hover:bg-green-400 hover:scale-105 active:scale-100 hover:text-black transition-all duration-150'
+        onClick={handleShowLobby}
+      >
+        SHOW LOBBIES
+      </button>
+    </div>
+    <div className='absolute flex flex-col items-center pt-8 bg-zinc-400 w-[330px] h-full lobby z-10'
+      style={
+        openLobby ?
+        {transform: 'translateX(0px)'} :
+        {transform: 'translateX(-330px)'}
+      }
+    >
+      <div className='absolute top-2 right-2 '>
+        <CgCloseR 
+          className='text-3xl text-red-600 hover:scale-125 active:100 transition-all duration-150'
+          onClick={handleShowLobby}
+        />
+      </div>
+      <div className='my-4'>
             {!createdLobby && 
             <button onClick={createLobby}
               className='bg-green-300 px-3 py-2 rounded-lg drop-shadow-sm shadow-md hover:scale-105 active:scale-100 transition-all duration-150'
@@ -202,6 +189,49 @@ export default function Lobby() {
               Start
             </button>}
           </div>
+      <section className='w-[300px] min-h-[300px] max-h-[70%] py-2 bg-slate-100 rounded-2xl shadow-xl drop-shadow-lg overflow-auto'>
+      {lobby.length > 0 && lobby.map((item : lobbyType, index: number) => {
+        return (
+            <div className='flex flex-row' key={index}>
+              <div className='basis-1/3 bg-red-300 text-center flex items-center justify-center text-lg my-1'>
+                {item?.host}
+              </div>
+              <div className='basis-1/3 bg-blue-300 text-center flex items-center justify-center text-lg my-1'>
+                {item?.player}
+              </div>
+              <div className='basis-1/3 text-center bg-slate-200 py-2 my-1 h-[2.5rem]'>
+                { (!joinedLobby && !item?.player) &&
+                  <button className='bg-green-300 px-3 rounded-md shadow-md drop-shadow-md hover:scale-105 active:scale-100 transition-all duration-150'
+                    onClick={(() => joinLobby(item?.host))}
+                  >
+                    JOIN
+                  </button> }
+                { (joinedLobbyId && (item?.player === userId)) && 
+                  <button className='bg-red-300 px-3  rounded-md shadow-md drop-shadow-md hover:scale-105 active:scale-100 transition-all duration-150'
+                    onClick={() => leaveLobby(item?.host)}
+                  >
+                    LEAVE
+                  </button>
+                }
+                { (joinedLobbyId && (item?.host === userId)) && 
+                  <button className='bg-red-300 px-3  rounded-md shadow-md drop-shadow-md hover:scale-105 active:scale-100 transition-all duration-150'
+                    onClick={deleteLobby}
+                  >
+                    DELETE
+                  </button>
+                }
+                { (item?.player && item?.player !== userId && joinedLobbyId !== userId) && 
+                  <button className='bg-orange-300 px-3  rounded-md shadow-md drop-shadow-md hover:scale-105 active:scale-100 transition-all duration-150'>
+                    FULL  
+                  </button>
+                }
+              </div>
+            </div>           
+        )
+      })}
+          </section>
+          
     </div>
+    </>
   )
 }

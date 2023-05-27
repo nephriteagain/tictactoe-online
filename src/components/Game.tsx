@@ -105,7 +105,7 @@ export default function Game() {
 
     if (!joinedGameId) return 
     
-    console.log('game useEffect')
+    // console.log('game useEffect')
     const gameRef = doc(db, 'tictactoe', joinedGameId)
     const unsub = onSnapshot(gameRef, (doc) => {
       const game = doc.data() as gameType
@@ -125,29 +125,32 @@ export default function Game() {
   }
 
   if (game && game.game.length > 0) return (
-    <div className="mx-auto my-8 ">
-      <h2 className="text-center text-3xl font-bold">
-        Game is Live
-      </h2>
-      <div>
+    <div className="mx-auto relative">
+      <div className="absolute top-[5%] left-[50%] translate-x-[-50%] w-full">
+        <h2 className="text-center text-3xl font-bold">
+          Game is Live
+        </h2>
+        <div>
 
-        <div className="flex flex-row my-1">
-          <div className="basis-1/3 text-center font-semibold text-xl">
-            x: {game.score.host}
+          <div className="flex flex-row my-1">
+            <div className="basis-1/3 text-center font-semibold text-xl">
+              x: {game.score.host}
+            </div>
+            <div className="basis-1/3 text-center font-semibold text-xl">
+              SCORE
+            </div>
+            <div className="basis-1/3 text-center font-semibold text-xl">
+              o: {game.score.player}
+            </div>
           </div>
-          <div className="basis-1/3 text-center font-semibold text-xl">
-            SCORE
+          <div className="text-center text-2xl font-bold mb-2">
+            {whosTurn(userId, game.turn, game.host)}
           </div>
-          <div className="basis-1/3 text-center font-semibold text-xl">
-            o: {game.score.player}
-          </div>
-        </div>
-        <div className="text-center text-2xl font-bold mb-2">
-          {whosTurn(userId, game.turn, game.host)}
         </div>
       </div>
+      
       <section
-        className="grid grid-cols-3 grid-rows-3 w-[300px] aspect-square rounded-lg overflow-hidden shadow-lg drop-shadow-md"
+        className="mt-[150px] grid grid-cols-3 grid-rows-3 w-[300px] aspect-square rounded-lg overflow-hidden shadow-lg drop-shadow-md"
       >
         {game.game.map((box : tictactoeButton, index) => {
           return (
@@ -189,7 +192,7 @@ export default function Game() {
 
   return (
     <section
-      className="mx-auto my-8 grid grid-cols-3 grid-rows-3 w-[300px] aspect-square rounded-lg overflow-hidden shadow-lg drop-shadow-md"
+      className="mx-auto mt-[150px] grid grid-cols-3 grid-rows-3 w-[300px] aspect-square rounded-lg overflow-hidden shadow-lg drop-shadow-md"
     >
       {initialGameState.map((box : tictactoeButton, index) => {
         return (
