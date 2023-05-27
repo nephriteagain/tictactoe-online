@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+
 import Lobby from './components/Lobby'
 import Game from './components/Game'
 

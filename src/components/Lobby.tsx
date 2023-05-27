@@ -26,7 +26,7 @@ import { initialGameState } from '../lib/data/initialGameState'
 import { CgCloseR } from 'react-icons/cg'
 
 import type { lobbyType } from '../features/slices/tictactoeSlice'
-import type { tictactoeButton } from '../lib/data/initialGameState'
+
 
 export default function Lobby() {
 
