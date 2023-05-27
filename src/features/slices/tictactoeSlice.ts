@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // import { getId } from "../../lib/helper/randomId";
-import { randomId } from "../../lib/helper/randomId";
+import { randomId } from "../../lib/helper/helper";
 
 import type { tictactoeButton } from "../../lib/data/initialGameState";
 
@@ -11,12 +11,14 @@ export interface lobbyType {
   gameStarted: boolean
 }
 
+export interface scoreType {
+  host: number
+  player: number
+}
+
 export interface gameType {
   game: tictactoeButton[]
-  score: {
-    host: number
-    player: number
-  }
+  score: scoreType
   turn: boolean
   host: string,  
 }
@@ -76,6 +78,10 @@ export const tictactoeSlice = createSlice({
     },
     getGameData: (state, action : PayloadAction<gameType>) => {
       state.game = action.payload
+    },
+    leaveGame: (state) => {
+      state.game = null
+      state.joinedGameId = null
     }
     
 
@@ -90,7 +96,8 @@ export const {
   joinNewLobby,
   leaveLobby,
   tictactoeStart,
-  getGameData
+  getGameData,
+  leaveGame
 } = tictactoeSlice.actions
 
 export default tictactoeSlice.reducer

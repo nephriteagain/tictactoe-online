@@ -12,10 +12,18 @@
     box-sizing: border-box;
   }
 
+  .pointer {
+    cursor: pointer;
+  }
+  .error {
+    cursor:not-allowed
+  }
+
   @media (min-width: 576px) {
     html {
       font-size: 16px;
     }
+
   }
   
 }

@@ -87,8 +87,6 @@ export default function Lobby() {
     const singleLobbyRef = doc(db, 'lobby', userId)
     const gameRef = doc(db, 'tictactoe', userId)
     
-    
-
     await setDoc(gameRef, {
       game: initialGameState,
       score: {
@@ -105,6 +103,8 @@ export default function Lobby() {
       })
       .catch(err => console.log(err))
   }
+
+
 
   useEffect(() => {
     console.log('all lobbies useEffect')
@@ -191,13 +191,13 @@ export default function Lobby() {
           <div className='my-4'>
             {!createdLobby && 
             <button onClick={createLobby}
-              className='bg-green-300 px-3 py-2 rounded-lg'
+              className='bg-green-300 px-3 py-2 rounded-lg drop-shadow-sm shadow-md hover:scale-105 active:scale-100 transition-all duration-150'
             >
               Create Lobby
             </button>}
             {(createdLobby && playerJoined) && 
             <button onClick={startGame}
-              className='bg-green-300 px-3 py-2 rounded-lg'
+              className='bg-green-300 px-3 py-2 rounded-lg drop-shadow-sm shadow-md hover:scale-105 active:scale-100 transition-all duration-150'
             >
               Start
             </button>}
