@@ -175,7 +175,7 @@ export default function Lobby() {
           onClick={handleShowLobby}
         />
       </div>
-      <div className='my-4'>
+      <div className='absolute left-[50%] top-8 translate-x-[-50%]'>
             {!createdLobby && 
             <button onClick={createLobby}
               className='bg-green-300 px-3 py-2 rounded-lg drop-shadow-sm shadow-md hover:scale-105 active:scale-100 transition-all duration-150'
@@ -189,7 +189,7 @@ export default function Lobby() {
               Start
             </button>}
           </div>
-      <section className='w-[280px] min-h-[300px] max-h-[70%] py-2 bg-slate-100 rounded-2xl shadow-xl drop-shadow-lg overflow-auto'>
+      <section className='mt-14 w-[280px] min-h-[300px] max-h-[70%] py-2 bg-slate-100 rounded-2xl shadow-xl drop-shadow-lg overflow-auto'>
       {lobby.length > 0 && lobby.map((item : lobbyType, index: number) => {
         return (
             <div className='flex flex-row' key={index}>
