@@ -7,12 +7,12 @@ import { getFirestore } from 'firebase/firestore'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCp_sUzcmpNDBP-sz6jkU6gqGy98V3TcZQ",
-  authDomain: "tictactoe-online-c4a07.firebaseapp.com",
-  projectId: "tictactoe-online-c4a07",
-  storageBucket: "tictactoe-online-c4a07.appspot.com",
-  messagingSenderId: "827651525557",
-  appId: "1:827651525557:web:cf3e3ed3983e480673a7fc"
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID
 };
 
 // Initialize Firebase
